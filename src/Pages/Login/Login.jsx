@@ -1,7 +1,8 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate,  } from 'react-router-dom';
 import loginImg from '../../assets/images/login/login.svg'
 import { useContext } from 'react';
 import { AuthContext } from '../../Providers/AuthProvider';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 
 
 const Login = () => {
@@ -20,7 +21,7 @@ const Login = () => {
         .then(result =>{
             const loggedUser = result.user;
             console.log(loggedUser);
-            navigate(path)
+            navigate(path, {replace: true})
         })
         .catch(error =>{
             console.log(error.message);
@@ -57,6 +58,8 @@ const Login = () => {
                             </div>
                             <p className='mt-5 text-center'>New to Car Doctor? <Link to="/register" state={location?.state} className='text-red-500'>Register Now</Link></p>
                         </form>
+                        <div className="divider">OR</div>
+                        <SocialLogin></SocialLogin>
                     </div>
                 </div>
             </div>

@@ -28,8 +28,8 @@ import Private from "./Private";
         },
         {
           path: '/bookService/:id',
-          element: <BookService></BookService>,
-          loader : ({params}) => fetch(`http://localhost:5000/services/${params.id}`)
+          element: <Private><BookService></BookService></Private>,
+          loader : ({params}) => fetch(`https://car-doctor-server-pitamchandra.vercel.app/services/${params.id}`)
         },
         {
           path : '/bookings',

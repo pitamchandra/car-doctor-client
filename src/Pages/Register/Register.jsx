@@ -22,7 +22,7 @@ const Register = () => {
         .then(result => {
             const createdUser = result.user;
             console.log(createdUser);
-            navigate(path)
+            navigate(path, {replace: true})
         })
         .catch(error =>{
             console.log(error.message);

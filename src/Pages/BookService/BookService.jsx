@@ -25,7 +25,7 @@ const BookService = () => {
             id: _id
         }
         console.log(order);
-        fetch('http://localhost:5000/bookings', {
+        fetch('https://car-doctor-server-pitamchandra.vercel.app/bookings', {
             method : 'POST',
             headers: {
                 'content-type' : 'application/json'
@@ -53,7 +53,7 @@ const BookService = () => {
                         <label className="label">
                             <span className="label-text">Name</span>
                         </label>
-                        <input type="text" placeholder="name" name="name" className="input input-bordered" />
+                        <input type="text" placeholder="name" name="name" defaultValue={user?.displayName} className="input input-bordered" />
                     </div>
                     <div className="form-control">
                         <label className="label">

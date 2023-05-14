@@ -1,5 +1,5 @@
 import { createContext, useEffect, useState } from "react";
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { GithubAuthProvider, GoogleAuthProvider, createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signInWithPopup, signOut } from "firebase/auth";
 import app from "../firebase/firebase.config";
 
 export const AuthContext = createContext(null)
@@ -9,6 +9,9 @@ const AuthProvider = ({children}) => {
 
     const [user, setUser] = useState(null)
     const [loading, setLoading] = useState(true)
+
+    const googleProvider = new GoogleAuthProvider()
+    const githubProvider = new GithubAuthProvider()
 
     const register = (email, password) =>{
         setLoading(true)
@@ -20,15 +23,50 @@ const AuthProvider = ({children}) => {
         return signInWithEmailAndPassword(auth, email, password)
     }
 
+    const googleLogin = () =>{
+        setLoading(true)
+        return signInWithPopup(auth, googleProvider)
+    }
+    const githubLogin = () =>{
+        setLoading(true)
+        return signInWithPopup(auth, githubProvider)
+    }
+
     const logout = () =>{
         setLoading(true)
         return signOut(auth)
     }
 
+    
+
     useEffect(()=>{
         const unsubscribe = onAuthStateChanged(auth, currentUser =>{
             setUser(currentUser)
             setLoading(false)
+            if(currentUser && currentUser.email){
+                const userEmail = {
+                    email : currentUser.email
+                }
+                fetch('https://car-doctor-server-pitamchandra.vercel.app/jwt',{
+                    method: 'POST',
+                    headers: {
+                        'content-type' : 'application/json'
+                    },
+                    body : JSON.stringify(userEmail)
+                })
+                .then(res=>res.json())
+                .then(data=>{
+                    console.log(data);
+                    localStorage.setItem('car-token', data.token)
+                    
+                })
+                .catch(error=>{
+                    console.log(error);
+                })
+            }
+            else{
+                localStorage.removeItem('car-token')
+            }
         })
         return () =>{
             return unsubscribe()
@@ -40,6 +78,8 @@ const AuthProvider = ({children}) => {
         loading,
         register,
         login,
+        googleLogin,
+        githubLogin,
         logout
     }
 
